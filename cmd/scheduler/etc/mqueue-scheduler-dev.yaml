@@ -1,0 +1,29 @@
+Name: mqueue-scheduler
+Host: 0.0.0.0
+Port: 8001
+Mode: dev
+Log:
+  ServiceName: mqueue-scheduler
+  Mode: console
+  Encoding: plain
+  Level: debug
+  Path: storage/logs
+
+Redis:
+    Host: 127.0.0.1:36379
+    Pass: jiangx
+    Type: node
+    Key: mqueue-scheduler
+
+#链路追踪
+Telemetry:
+  Name: mqueue-scheduler
+  Endpoint: http://127.0.0.1:14268/api/traces
+  Sampler: 1.0
+  Batcher: jaeger
+
+#监控
+Prometheus:
+  Host: 0.0.0.0
+  Port: 4001
+  Path: /metrics
