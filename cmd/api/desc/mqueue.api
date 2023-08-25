@@ -1,0 +1,37 @@
+syntax = "v1"
+
+info(
+	title: "定时任务服务"
+	desc: "定时任务服务"
+	author: "jiangx"
+	email: "jiangx@xxx.com"
+	version: "v1"
+)
+
+import (
+	"mqueue/task.api"
+)
+
+@server(
+	prefix: mqueue
+	group: mqueue
+	jwt: Jwt
+)
+
+service mqueue-api {
+	@doc "获取任务列表"
+	@handler getTasks
+	get /tasks (TasksCollectionReq) returns (TasksCollectionResp)
+	
+	@doc "创建任务"
+	@handler createTask
+	post /tasks (CreateTaskReq) returns (CreateTaskResp)
+	
+	@doc "获取任务详情"
+	@handler getTask
+	get /tasks/:task_name (TaskItemReq) returns (TaskItemResp)
+	
+	@doc "取消|关闭 任务"
+	@handler switchTaskState
+	put /tasks/:task_name/state (SwitchTaskStateReq) returns (SwitchTaskStateResp)
+}

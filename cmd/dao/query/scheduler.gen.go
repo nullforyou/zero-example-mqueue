@@ -34,6 +34,7 @@ func newScheduler(db *gorm.DB, opts ...gen.DOOption) scheduler {
 	_scheduler.TaskName = field.NewString(tableName, "task_name")
 	_scheduler.TaskRemark = field.NewString(tableName, "task_remark")
 	_scheduler.Target = field.NewString(tableName, "target")
+	_scheduler.State = field.NewInt32(tableName, "state")
 	_scheduler.DeletedAt = field.NewField(tableName, "deleted_at")
 	_scheduler.CreatedAt = field.NewTime(tableName, "created_at")
 	_scheduler.UpdatedAt = field.NewTime(tableName, "updated_at")
@@ -54,6 +55,7 @@ type scheduler struct {
 	TaskName        field.String // 定时任务名称
 	TaskRemark      field.String // 定时任务备注
 	Target          field.String // 目标
+	State           field.Int32  // 状态 1:启用 0:请用
 	DeletedAt       field.Field
 	CreatedAt       field.Time
 	UpdatedAt       field.Time
@@ -80,6 +82,7 @@ func (s *scheduler) updateTableName(table string) *scheduler {
 	s.TaskName = field.NewString(table, "task_name")
 	s.TaskRemark = field.NewString(table, "task_remark")
 	s.Target = field.NewString(table, "target")
+	s.State = field.NewInt32(table, "state")
 	s.DeletedAt = field.NewField(table, "deleted_at")
 	s.CreatedAt = field.NewTime(table, "created_at")
 	s.UpdatedAt = field.NewTime(table, "updated_at")
@@ -109,7 +112,7 @@ func (s *scheduler) GetFieldByName(fieldName string) (field.OrderExpr, bool) {
 }
 
 func (s *scheduler) fillFieldMap() {
-	s.fieldMap = make(map[string]field.Expr, 10)
+	s.fieldMap = make(map[string]field.Expr, 11)
 	s.fieldMap["id"] = s.ID
 	s.fieldMap["belong_to_service"] = s.BelongToService
 	s.fieldMap["cron_spec"] = s.CronSpec
@@ -117,6 +120,7 @@ func (s *scheduler) fillFieldMap() {
 	s.fieldMap["task_name"] = s.TaskName
 	s.fieldMap["task_remark"] = s.TaskRemark
 	s.fieldMap["target"] = s.Target
+	s.fieldMap["state"] = s.State
 	s.fieldMap["deleted_at"] = s.DeletedAt
 	s.fieldMap["created_at"] = s.CreatedAt
 	s.fieldMap["updated_at"] = s.UpdatedAt
