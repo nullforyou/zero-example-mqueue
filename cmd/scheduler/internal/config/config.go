@@ -8,4 +8,8 @@ import (
 type Config struct {
 	service.ServiceConf
 	Redis redis.RedisConf
+	Mysql struct {
+		DataSource  string
+		TablePrefix string
+	}
 }

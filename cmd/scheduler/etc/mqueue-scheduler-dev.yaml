@@ -8,7 +8,9 @@ Log:
   Encoding: plain
   Level: debug
   Path: storage/logs
-
+Mysql:
+  DataSource: root:jiangxiong@(127.0.0.1:3306)/greet?charset=utf8mb4&parseTime=True
+  TablePrefix: greet
 Redis:
     Host: 127.0.0.1:36379
     Pass: jiangx
