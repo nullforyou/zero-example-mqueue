@@ -1,9 +1,7 @@
 package main
 
 import (
-	"encoding/json"
 	"flag"
-	"fmt"
 	"github.com/zeromicro/go-zero/core/conf"
 	"github.com/zeromicro/go-zero/core/logx"
 	"mqueue/cmd/scheduler/internal/config"
@@ -27,9 +25,6 @@ func main() {
 	//ctx := context.Background()
 	//scheduler := logic.NewCronScheduler(ctx, svcContext.Scheduler)
 	//scheduler.Register()
-
-	jsonStr, _ := json.Marshal(c)
-	fmt.Println(string(jsonStr))
 
 	if err := svcContext.Scheduler.Run(); err != nil {
 		logx.Errorf("mqueue-scheduler运行错误 err:%+v", err)
