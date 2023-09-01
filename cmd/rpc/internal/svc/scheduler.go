@@ -75,7 +75,6 @@ func (s StorageConfigProvider) GetConfigs() ([]*asynq.PeriodicTaskConfig, error)
 			asynq.TaskID("PeriodicTask:"+scheduler.TaskName), //独特的任务,使用TaskId避免重复
 			asynq.Deadline(deadline),                         //生命周期，超过生命周期时间内未执行，将被放弃
 			asynq.Timeout(30*time.Second),                    //超时时间
-			asynq.
 		)
 		configs = append(configs, &asynq.PeriodicTaskConfig{Cronspec: scheduler.CronSpec, Task: task})
 	}
