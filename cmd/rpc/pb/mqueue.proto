@@ -1,0 +1,15 @@
+syntax = "proto3";
+
+package mqueue;
+
+option go_package = "./task";
+
+message WorkOrderReq{
+  string taskName = 1;
+}
+
+message WorkOrderReply{}
+
+service task {
+  rpc createWorkOrder(WorkOrderReq) returns(WorkOrderReply);
+}

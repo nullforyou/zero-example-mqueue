@@ -1,9 +1,12 @@
-Name: mqueue-scheduler
-Host: 0.0.0.0
-Port: 8004
+Name: mqueue.rpc
+ListenOn: 0.0.0.0:8002
 Mode: dev
+Etcd:
+  Hosts:
+  - 127.0.0.1:2379
+  Key: mqueue.rpc
 Log:
-  ServiceName: mqueue-scheduler
+  ServiceName: mqueue-rpc
   Mode: console
   Encoding: plain
   Level: debug
@@ -12,10 +15,10 @@ Mysql:
   DataSource: root:jiangxiong@(127.0.0.1:3306)/greet?charset=utf8mb4&parseTime=True
   TablePrefix: greet
 Redis:
-    Host: 127.0.0.1:36379
-    Pass: jiangx
-    Type: node
-    Key: mqueue-scheduler
+  Host: 127.0.0.1:36379
+  Pass: jiangx
+  Type: node
+  Key: mqueue-scheduler
 
 ##链路追踪
 #Telemetry:

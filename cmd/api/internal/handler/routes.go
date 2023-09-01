@@ -30,8 +30,18 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 			},
 			{
 				Method:  http.MethodPut,
+				Path:    "/tasks/:task_name",
+				Handler: mqueue.UpdateTaskHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodPut,
 				Path:    "/tasks/:task_name/state",
 				Handler: mqueue.SwitchTaskStateHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodPost,
+				Path:    "/tasks/:task_name/work_order",
+				Handler: mqueue.ExecuteTaskHandler(serverCtx),
 			},
 		},
 		rest.WithJwt(serverCtx.Config.Jwt.AccessSecret),

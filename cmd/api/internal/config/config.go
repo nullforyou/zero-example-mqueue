@@ -1,10 +1,15 @@
 package config
 
-import "github.com/zeromicro/go-zero/rest"
+import (
+	"github.com/zeromicro/go-zero/core/stores/redis"
+	"github.com/zeromicro/go-zero/rest"
+	"github.com/zeromicro/go-zero/zrpc"
+)
 
 type Config struct {
 	rest.RestConf
-	Jwt struct {
+	Redis redis.RedisConf
+	Jwt   struct {
 		AccessSecret string
 		AccessExpire int64
 	}
@@ -12,4 +17,5 @@ type Config struct {
 		DataSource  string
 		TablePrefix string
 	}
+	MQueueRpc zrpc.RpcClientConf
 }

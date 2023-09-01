@@ -7,7 +7,7 @@ import (
 	"github.com/zeromicro/go-zero/core/logx"
 	"gorm.io/gorm"
 	"mqueue/cmd/dao/query"
-	"mqueue/cmd/scheduler/internal/config"
+	"mqueue/cmd/rpc/internal/config"
 	"time"
 )
 

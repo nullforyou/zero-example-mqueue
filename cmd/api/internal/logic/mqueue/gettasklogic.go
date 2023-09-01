@@ -2,6 +2,11 @@ package mqueue
 
 import (
 	"context"
+	"errors"
+	"go-zero-base/utils/xerr"
+	"gorm.io/gorm"
+	"mqueue/cmd/business"
+	"mqueue/cmd/dao/model"
 
 	"mqueue/cmd/api/internal/svc"
 	"mqueue/cmd/api/internal/types"
@@ -24,7 +29,23 @@ func NewGetTaskLogic(ctx context.Context, svcCtx *svc.ServiceContext) *GetTaskLo
 }
 
 func (l *GetTaskLogic) GetTask(req *types.TaskItemReq) (resp *types.TaskItemResp, err error) {
-	// todo: add your logic here and delete this line
+	scheduler := model.Scheduler{}
+	err = l.svcCtx.DbEngine.Model(scheduler).Where("task_name = ?", req.TaskName).First(&scheduler).Error
 
-	return
+	if err != nil && errors.Is(err, gorm.ErrRecordNotFound) {
+		return nil, xerr.NewBusinessError(xerr.SetCode(xerr.ErrorNotFound), xerr.SetMsg("任务不存在"))
+	}
+
+	return &types.TaskItemResp{
+		CreateTaskItem: types.CreateTaskItem{
+			BelongToService: scheduler.BelongToService,
+			CronSpec:        scheduler.CronSpec,
+			TaskType:        scheduler.TaskType,
+			TaskName:        scheduler.TaskName,
+			TaskRemark:      scheduler.TaskRemark,
+			Target:          scheduler.Target,
+			State:           int(scheduler.State),
+		},
+		UpdatedAt: scheduler.UpdatedAt.Format(business.YYMMDDHHMMSS),
+	}, err
 }

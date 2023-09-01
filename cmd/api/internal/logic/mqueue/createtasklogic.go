@@ -48,7 +48,8 @@ func (l *CreateTaskLogic) CreateTask(req *types.CreateTaskReq) (resp *types.Crea
 
 	return &types.CreateTaskResp{
 		TaskItemResp: types.TaskItemResp{
-			CreateTaskTaskItem: types.CreateTaskTaskItem{
+			Id: int(schedulerModel.ID),
+			CreateTaskItem: types.CreateTaskItem{
 				BelongToService: schedulerModel.BelongToService,
 				CronSpec:        schedulerModel.CronSpec,
 				TaskType:        schedulerModel.TaskType,

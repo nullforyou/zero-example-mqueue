@@ -34,6 +34,9 @@ func main() {
 	ctx := svc.NewServiceContext(c)
 	handler.RegisterHandlers(server, ctx)
 
+	//注册目录处理器
+	handler.RegisterStaticFileHandler(server, ctx)
+
 	fmt.Printf("Starting server at %s:%d...\n", c.Host, c.Port)
 
 	server.Start()

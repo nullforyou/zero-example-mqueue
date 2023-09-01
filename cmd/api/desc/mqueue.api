@@ -31,7 +31,15 @@ service mqueue-api {
 	@handler getTask
 	get /tasks/:task_name (TaskItemReq) returns (TaskItemResp)
 	
+	@doc "修改任务"
+	@handler updateTask
+	put /tasks/:task_name (UpdateTaskReq) returns (UpdateTaskResp)
+	
 	@doc "取消|关闭 任务"
 	@handler switchTaskState
 	put /tasks/:task_name/state (SwitchTaskStateReq) returns (SwitchTaskStateResp)
+	
+	@doc "执行任务"
+	@handler executeTask
+	post /tasks/:task_name/workOrder (ExecuteTaskReq) returns (ExecuteTaskResp)
 }

@@ -5,7 +5,7 @@ import (
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 	"gorm.io/gorm/schema"
-	"mqueue/cmd/scheduler/internal/config"
+	"mqueue/cmd/rpc/internal/config"
 )
 
 type ServiceContext struct {
