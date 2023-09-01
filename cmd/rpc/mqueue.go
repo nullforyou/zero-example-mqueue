@@ -24,11 +24,6 @@ func main() {
 	conf.MustLoad(*configFile, &c, conf.UseEnv())
 	ctx := svc.NewServiceContext(c)
 
-	//周期任务运行
-	/*if err := ctx.Scheduler.Run(); err != nil {
-		logx.Errorf("scheduler运行错误 err:%+v", err)
-	}*/
-
 	s := zrpc.MustNewServer(c.RpcServerConf, func(grpcServer *grpc.Server) {
 		task.RegisterTaskServer(grpcServer, server.NewTaskServer(ctx))
 
@@ -40,5 +35,10 @@ func main() {
 
 	fmt.Printf("Starting rpc server at %s...\n", c.ListenOn)
 	s.Start()
+
+	//周期任务运行
+	if err := ctx.Scheduler.Run(); err != nil {
+		logx.Errorf("scheduler运行错误 err:%+v", err)
+	}
 
 }

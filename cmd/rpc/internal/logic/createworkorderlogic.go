@@ -8,8 +8,6 @@ import (
 	"go-zero-base/utils/xerr"
 	"mqueue/cmd/dao/model"
 	"mqueue/cmd/dao/query"
-	"time"
-
 	"mqueue/cmd/pb/task"
 	"mqueue/cmd/rpc/internal/svc"
 
@@ -31,8 +29,6 @@ func NewCreateWorkOrderLogic(ctx context.Context, svcCtx *svc.ServiceContext) *C
 }
 
 func (l *CreateWorkOrderLogic) CreateWorkOrder(in *task.WorkOrderReq) (*task.WorkOrderReply, error) {
-	return &task.WorkOrderReply{}, nil
-
 	query.SetDefault(l.svcCtx.DbEngine)
 	ctx := context.Background()
 	scheduler := query.Scheduler
@@ -54,15 +50,15 @@ func pushTask(svcCtx *svc.ServiceContext, schedulerModel *model.Scheduler) error
 	client := asynq.NewClient(asynq.RedisClientOpt{Addr: svcCtx.Config.Redis.Host, Password: svcCtx.Config.Redis.Pass})
 
 	payload, _ := json.Marshal(schedulerModel)
-	newTask := asynq.NewTask(schedulerModel.TaskName, payload)
+	newTask := asynq.NewTask("platform-http", payload)
 	//插入队列5秒后处理
-	enqueue, err := client.Enqueue(newTask, asynq.ProcessIn(5*time.Second))
+	enqueue, err := client.Enqueue(newTask, asynq.Queue("critical"), asynq.MaxRetry(1))
 
 	if err != nil {
 		return err
 	}
 
-	logx.Debugf("enqueued task: id=%s queue=%s", enqueue.ID, enqueue.Queue)
+	logx.Debugf("已进入队列: id=%s queue=%s", enqueue.ID, enqueue.Queue)
 
 	err = client.Close()
 	if err != nil {
