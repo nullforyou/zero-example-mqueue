@@ -1,1 +1,4 @@
 /.idea
+/api/storage
+/rpc/storage
+/job/storage
