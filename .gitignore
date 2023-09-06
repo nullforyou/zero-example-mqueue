@@ -1,4 +1,2 @@
 /.idea
-/cmd/api/storage/logs
-/cmd/rpc/storage/logs
-/cmd/job/storage/logs
+/cmd/storage/logs

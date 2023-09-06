@@ -10,4 +10,7 @@ const (
 
 	DISABLED = 0 //不可用
 	ENABLED  = 1 //可用
+
 )
+
+const PlatformHttp = "platform-http"

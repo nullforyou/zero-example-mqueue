@@ -1,0 +1,21 @@
+Name: MQueue-api
+Host: 0.0.0.0
+Port: 8001
+Mode: dev
+Log:
+  ServiceName: MQueue-api
+  Mode: file
+  Encoding: json
+  Level: info
+  Path: storage/logs
+Mysql:
+  DataSource: root:jiangxiong@(127.0.0.1:3306)/greet?charset=utf8mb4&parseTime=True
+  TablePrefix: greet
+Jwt:
+  AccessSecret: 26dd14afdb7e622637b2abf4f15a5714a64df2ef6440bb6617e814815ae973ddd2998298c4491e165ae50bf0790fba8afce9b350e466e421974881c13d034f8d
+  AccessExpire: 31104000
+Redis:
+  Host: 127.0.0.1:36379
+  Pass: jiangx
+  Type: node
+  Key: MQueue-scheduler
