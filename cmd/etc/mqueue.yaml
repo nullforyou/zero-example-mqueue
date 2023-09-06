@@ -4,7 +4,7 @@ Port: 8001
 Mode: dev
 Log:
   ServiceName: MQueue-api
-  Mode: file
+  Mode: console
   Encoding: json
   Level: info
   Path: storage/logs

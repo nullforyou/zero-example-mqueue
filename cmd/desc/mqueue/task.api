@@ -18,7 +18,8 @@ type (
         TaskName        string `json:"task_name,optional" comment:"任务名称" validate:"required"`
         TaskRemark      string `json:"task_remark,optional" comment:"任务描述" validate:"required"`
         Target          string `json:"target,optional" comment:"任务目标"`
-        State           int `json:"state,optional" comment:"状态" validate:"omitempty,required,oneof=0 1"`
+        Payload         string `json:"payload,optional" comment:"有效载荷" validate:"omitempty,json"`
+        State           int `json:"state,optional" comment:"状态" validate:"omitempty,oneof=0 1"`
     }
 
     TaskItemResp {
@@ -31,7 +32,7 @@ type (
         BelongToService string `form:"belong_to_service,optional"`
         TaskType string `form:"task_type,optional"`
         TaskName string `form:"task_name,optional"`
-        State string `form:"state,optional" validate:"omitempty,required,oneof=enable disable"`
+        State string `form:"state,optional" validate:"omitempty,oneof=enable disable"`
         Page     int `form:"page,default=1"`
         PageSize int `form:"page_size,default=10"`
     }
@@ -51,7 +52,7 @@ type (
 
     SwitchTaskStateReq {
         TaskName string `path:"task_name" validate:"required"`
-        State    int `json:"state,optional" validate:"omitempty,required,oneof=0 1"`
+        State    int `json:"state,optional" validate:"omitempty,oneof=0 1"`
     }
 
     SwitchTaskStateResp {
