@@ -13,18 +13,21 @@ import (
 	"strings"
 )
 
+var jobConfigFile = flag.String("f", "etc/mqueue.yaml", "Specify the config file")
+
 func main() {
 	flag.Parse()
-	logx.DisableStat()
+	//logx.DisableStat()
 	var c config.Config
-	conf.MustLoad(*config.GetConfigFile(), &c, conf.UseEnv())
+	conf.MustLoad(*jobConfigFile, &c, conf.UseEnv())
 
 	if err := c.SetUp(); err != nil {
 		panic(err)
 	}
 
+	ctx := job.NewServiceContext(c)
 	mux := asynq.NewServeMux()
-	mux.HandleFunc(business.PlatformHttp, job.PlatformHttpHandler)
+	mux.Handle(business.PlatformHttp, job.NewPlatformHttpHandler(ctx))
 
 	server := newAsynqServer(c)
 	if err := server.Run(mux); err != nil {
@@ -54,9 +57,9 @@ func newAsynqServer(c config.Config) *asynq.Server {
 			},
 			StrictPriority: false, //关键队列中的任务总是首先被处理。如果关键队列为空，则处理默认队列。如果关键队列和默认队列都为空，则处理低队列。
 			ErrorHandler: asynq.ErrorHandlerFunc(func(ctx context.Context, task *asynq.Task, err error) {
-				if strings.EqualFold(err.Error(), "context deadline exceeded") {
-					logx.Infof("任务超过有效期,payload:%s;", task.Payload())
-				}
+				//if strings.EqualFold(err.Error(), "context deadline exceeded") {
+				logx.Infof("任务超过有效期,payload:%s;", task.Payload())
+				//}
 			}),
 		},
 	)

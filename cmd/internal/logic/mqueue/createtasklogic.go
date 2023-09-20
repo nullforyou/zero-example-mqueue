@@ -41,6 +41,7 @@ func (l *CreateTaskLogic) CreateTask(req *types.CreateTaskReq) (resp *types.Crea
 		TaskName:        req.TaskName,
 		TaskRemark:      req.TaskRemark,
 		Target:          req.Target,
+		Payload:         req.Payload,
 		State:           int32(req.State),
 	}
 
@@ -55,6 +56,7 @@ func (l *CreateTaskLogic) CreateTask(req *types.CreateTaskReq) (resp *types.Crea
 				TaskType:        schedulerModel.TaskType,
 				TaskName:        schedulerModel.TaskName,
 				Target:          schedulerModel.Target,
+				Payload:         schedulerModel.Payload,
 				State:           int(schedulerModel.State),
 			},
 			UpdatedAt: schedulerModel.UpdatedAt.Format(business.YYMMDDHHMMSS),

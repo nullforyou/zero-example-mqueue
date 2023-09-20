@@ -1,7 +1,6 @@
 package config
 
 import (
-	"flag"
 	"github.com/zeromicro/go-zero/core/stores/redis"
 	"github.com/zeromicro/go-zero/rest"
 )
@@ -17,8 +16,4 @@ type Config struct {
 		DataSource  string
 		TablePrefix string
 	}
-}
-
-func GetConfigFile() *string {
-	return flag.String("f", "etc/mqueue.yaml", "the config file")
 }

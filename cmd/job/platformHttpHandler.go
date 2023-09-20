@@ -1,16 +1,15 @@
 package job
 
 import (
+	"bytes"
 	"context"
 	"encoding/json"
-	"fmt"
 	"github.com/hibiken/asynq"
 	"github.com/zeromicro/go-zero/core/logx"
-	"github.com/zeromicro/go-zero/rest/httpc"
-	"io"
+	"go-common/tool"
 	"mqueue/cmd/business"
 	"net/http"
-	"os"
+	"time"
 )
 
 type Scheduler struct {
@@ -20,36 +19,52 @@ type Scheduler struct {
 	TaskName        string `json:"task_name"`
 	TaskRemark      string `json:"task_remark"`
 	Target          string `json:"target"`
+	Payload         string `json:"payload"`
 }
 
-type Request struct {
-	Node   string `path:"node"`
-	ID     int    `form:"id"`
-	Header string `header:"X-Header"`
+type PlatformHttpHandler struct {
+	svcCtx *ServiceContext
 }
 
-func PlatformHttpHandler(ctx context.Context, t *asynq.Task) error {
+func NewPlatformHttpHandler(svcCtx *ServiceContext) *PlatformHttpHandler {
+	return &PlatformHttpHandler{svcCtx: svcCtx}
+}
+
+func (h *PlatformHttpHandler) ProcessTask(ctx context.Context, t *asynq.Task) error {
 	var scheduler Scheduler
 	if err := json.Unmarshal(t.Payload(), &scheduler); err != nil {
-		return fmt.Errorf("<解析Payload失败，payload：%s>: %w", t.Payload(), asynq.SkipRetry)
+		logx.Errorf("[%s]解析Payload失败，payload：%s", business.PlatformHttp, t.Payload())
 	}
-	logx.Infof("执行【%s】 TaskRemark:%s", business.PlatformHttp, scheduler.TaskRemark)
-
+	logx.Debugf("[%s]执行任务:%s", business.PlatformHttp, scheduler.TaskRemark)
+	toDo(h.svcCtx, scheduler)
 	return nil
 }
 
-func toDo(scheduler Scheduler) {
-	req := Request{
-		Node:   "foo",
-		ID:     1024,
-		Header: "foo-header",
-	}
-	resp, err := httpc.Do(context.Background(), http.MethodPost, scheduler.Target, req)
-	// resp, err := httpc.Do(context.Background(), http.MethodPost, *domain+"/nodes/:node", req)
+func toDo(svcCtx *ServiceContext, scheduler Scheduler) {
+	request, _ := http.NewRequest("POST", scheduler.Target, bytes.NewBuffer([]byte(scheduler.Payload)))
+	request.Header.Set("Content-Type", "application/json; charset=UTF-8")
+
+	request.Header.Set("Authorization", "Bearer "+getJwtToken(svcCtx))
+
+	client := &http.Client{Timeout: 10 * time.Second}
+	response, err := client.Do(request)
 	if err != nil {
-		fmt.Println(err)
+		logx.Debugf("[%s]执行[%s]任务结果-httpRequest失败：%s", business.PlatformHttp, scheduler.TaskName, err.Error())
 		return
 	}
+	defer response.Body.Close()
+	//body, _ := io.ReadAll(response.Body)
+	//logx.Debugf("[%s]执行[%s]任务结果-responseStatus:%s;responseBody:%s;", business.PlatformHttp, scheduler.TaskName, response.Status, string(body))
+	return
+}
 
-	io.Copy(os.Stdout, resp.Body)
+func getJwtToken(svcCtx *ServiceContext) string {
+	key := "mQueue:job-http-jwt"
+	exists, _ := svcCtx.Redis.Exists(key)
+	if !exists {
+		jwtToken, _ := tool.GetJwtToken(svcCtx.Config.Jwt.AccessSecret, svcCtx.Config.Jwt.AccessExpire, 0)
+		svcCtx.Redis.SetnxEx(key, jwtToken, 86400)
+	}
+	jwt, _ := svcCtx.Redis.Get(key)
+	return jwt
 }

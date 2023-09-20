@@ -43,6 +43,7 @@ func (l *UpdateTaskLogic) UpdateTask(req *types.UpdateTaskReq) (resp *types.Upda
 				TaskName:        req.TaskName,
 				TaskRemark:      req.TaskRemark,
 				Target:          req.Target,
+				Payload:         req.Payload,
 			})
 
 	return &types.UpdateTaskResp{
@@ -54,6 +55,7 @@ func (l *UpdateTaskLogic) UpdateTask(req *types.UpdateTaskReq) (resp *types.Upda
 				TaskType:        scheduler.TaskType,
 				TaskName:        scheduler.TaskName,
 				Target:          scheduler.Target,
+				Payload:         scheduler.Payload,
 				State:           int(scheduler.State),
 			},
 			UpdatedAt: scheduler.UpdatedAt.Format(business.YYMMDDHHMMSS),

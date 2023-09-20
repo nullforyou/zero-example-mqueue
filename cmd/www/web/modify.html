@@ -18,13 +18,13 @@
                             <div class="layui-inline">
                                 <label class="layui-form-label">所属服务</label>
                                 <div class="layui-input-inline">
-                                    <input class="layui-input" type="text" id="belong_to_service" name="belong_to_service" lay-verify="required" value="" placeholder="所属服务">
+                                    <input class="layui-input" type="text" id="belong_to_service" name="belong_to_service" lay-verify="required" value="" autocomplete="off" placeholder="所属服务">
                                 </div>
                             </div>
                             <div class="layui-inline">
                                 <label class="layui-form-label">任务规格</label>
                                 <div class="layui-input-inline">
-                                    <input class="layui-input" type="text" id="cron_spec" name="cron_spec" lay-verify="required" value="" placeholder="任务规格">
+                                    <input class="layui-input" type="text" id="cron_spec" name="cron_spec" lay-verify="required" value="" autocomplete="off" placeholder="任务规格">
                                 </div>
                             </div>
                         </div>
@@ -42,7 +42,7 @@
                             <div class="layui-inline">
                                 <label class="layui-form-label">任务名称</label>
                                 <div class="layui-input-inline">
-                                    <input class="layui-input" type="text" id="task_name" name="task_name" lay-verify="required" value="" placeholder="任务名称">
+                                    <input class="layui-input" type="text" id="task_name" name="task_name" lay-verify="required" value="" autocomplete="off" placeholder="任务名称">
                                 </div>
                             </div>
                         </div>
@@ -58,7 +58,13 @@
                             <label class="layui-form-label">目标</label>
                             <div class="layui-input-block">
 
-                                <input class="layui-input" type="text" id="target" name="target" lay-verify="required" value="" placeholder="目标">
+                                <input class="layui-input" type="text" id="target" name="target" lay-verify="required" value="" autocomplete="off" placeholder="目标">
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">载荷</label>
+                            <div class="layui-input-block">
+                                <input class="layui-input" type="text" id="payload" name="payload" lay-verify="required" value="" autocomplete="off" placeholder="空值请填{}">
                             </div>
                         </div>
 
@@ -146,6 +152,7 @@
                     $("#task_remark").val(json.data.task_remark);
                     $("#task_type").val(json.data.task_type);
                     $("#target").val(json.data.target);
+                    $("#payload").val(json.data.payload);
                     if (json.data.state === 1) {
                         $("#state").attr('checked', true);
                     } else {

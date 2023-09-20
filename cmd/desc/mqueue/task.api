@@ -18,7 +18,7 @@ type (
         TaskName        string `json:"task_name,optional" comment:"任务名称" validate:"required"`
         TaskRemark      string `json:"task_remark,optional" comment:"任务描述" validate:"required"`
         Target          string `json:"target,optional" comment:"任务目标"`
-        Payload         string `json:"payload,optional" comment:"有效载荷" validate:"omitempty,json"`
+        Payload         string `json:"payload,optional" comment:"有效载荷" validate:"required,json"`
         State           int `json:"state,optional" comment:"状态" validate:"omitempty,oneof=0 1"`
     }
 

@@ -141,6 +141,7 @@
                 {field:'cron_spec', width:200, title:'执行规范'},
                 {field:'task_remark', title:'任务描述'},
                 {field:'target', title:'目标'},
+                {field:'payload', width:200, title:'有效载荷'},
                 {field:'updated_at', width: 180, title:'变更时间', templet: function(d){
                      return new Date(d.updated_at).format("yyyy-MM-dd hh:mm:ss")
                 }},
@@ -187,7 +188,7 @@
         layer.open({
             type: 2
             ,title: '添加周期任务'
-            ,area: ['750px', '435px']
+            ,area: ['750px', '490px']
             ,shade: 0.5
             ,maxmin: false
             ,content: '/web/add.html'
@@ -198,7 +199,7 @@
         layer.open({
             type: 2
             ,title: '修改周期任务'
-            ,area: ['750px', '435px']
+            ,area: ['750px', '490px']
             ,shade: 0.5
             ,maxmin: false
             ,content: '/web/modify.html?task_name=' + scheduler.task_name

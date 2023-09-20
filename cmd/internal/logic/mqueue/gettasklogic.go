@@ -44,6 +44,7 @@ func (l *GetTaskLogic) GetTask(req *types.TaskItemReq) (resp *types.TaskItemResp
 			TaskName:        scheduler.TaskName,
 			TaskRemark:      scheduler.TaskRemark,
 			Target:          scheduler.Target,
+			Payload:         scheduler.Payload,
 			State:           int(scheduler.State),
 		},
 		UpdatedAt: scheduler.UpdatedAt.Format(business.YYMMDDHHMMSS),
