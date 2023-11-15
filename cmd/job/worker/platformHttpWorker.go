@@ -1,4 +1,4 @@
-package job
+package worker
 
 import (
 	"bytes"
@@ -8,6 +8,7 @@ import (
 	"github.com/zeromicro/go-zero/core/logx"
 	"go-common/tool"
 	"mqueue/cmd/business"
+	"mqueue/cmd/job"
 	"net/http"
 	"time"
 )
@@ -22,15 +23,15 @@ type Scheduler struct {
 	Payload         string `json:"payload"`
 }
 
-type PlatformHttpHandler struct {
-	svcCtx *ServiceContext
+type PlatformHttpWorker struct {
+	svcCtx *job.ServiceContext
 }
 
-func NewPlatformHttpHandler(svcCtx *ServiceContext) *PlatformHttpHandler {
-	return &PlatformHttpHandler{svcCtx: svcCtx}
+func NewPlatformHttpWorker(svcCtx *job.ServiceContext) *PlatformHttpWorker {
+	return &PlatformHttpWorker{svcCtx: svcCtx}
 }
 
-func (h *PlatformHttpHandler) ProcessTask(ctx context.Context, t *asynq.Task) error {
+func (h *PlatformHttpWorker) ProcessTask(ctx context.Context, t *asynq.Task) error {
 	var scheduler Scheduler
 	if err := json.Unmarshal(t.Payload(), &scheduler); err != nil {
 		logx.Errorf("[%s]解析Payload失败，payload：%s", business.PlatformHttp, t.Payload())
@@ -40,7 +41,7 @@ func (h *PlatformHttpHandler) ProcessTask(ctx context.Context, t *asynq.Task) er
 	return nil
 }
 
-func toDo(svcCtx *ServiceContext, scheduler Scheduler) {
+func toDo(svcCtx *job.ServiceContext, scheduler Scheduler) {
 	request, _ := http.NewRequest("POST", scheduler.Target, bytes.NewBuffer([]byte(scheduler.Payload)))
 	request.Header.Set("Content-Type", "application/json; charset=UTF-8")
 
@@ -58,7 +59,7 @@ func toDo(svcCtx *ServiceContext, scheduler Scheduler) {
 	return
 }
 
-func getJwtToken(svcCtx *ServiceContext) string {
+func getJwtToken(svcCtx *job.ServiceContext) string {
 	key := "mQueue:job-http-jwt"
 	exists, _ := svcCtx.Redis.Exists(key)
 	if !exists {

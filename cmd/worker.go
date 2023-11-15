@@ -9,6 +9,7 @@ import (
 	"mqueue/cmd/business"
 	"mqueue/cmd/config"
 	"mqueue/cmd/job"
+	"mqueue/cmd/job/worker"
 	"os"
 	"strings"
 )
@@ -27,7 +28,7 @@ func main() {
 
 	ctx := job.NewServiceContext(c)
 	mux := asynq.NewServeMux()
-	mux.Handle(business.PlatformHttp, job.NewPlatformHttpHandler(ctx))
+	mux.Handle(business.PlatformHttp, worker.NewPlatformHttpWorker(ctx))
 
 	server := newAsynqServer(c)
 	if err := server.Run(mux); err != nil {
